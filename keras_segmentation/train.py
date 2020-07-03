@@ -149,21 +149,13 @@ def train(model,
             val_images, val_annotations,  val_batch_size,
             n_classes, input_height, input_width, output_height, output_width)
     
-    checkpoint_filepath = '/cta/users/gyar/Finland/RunFolder/checkpoint/'
-    model_checkpoint_callback = ModelCheckpoint(
-    filepath=checkpoint_filepath,
-    save_weights_only=True,
-    monitor='val_acc',
-    mode='max',
-    save_best_only=True)
+
     
-    
-    tensorboard_callback = TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/',
-                                                      histogram_freq=1,
-                                                      profile_batch=5)
-    
+  
     callbacks = [
-        model_checkpoint_callback,tensorboard_callback
+        
+        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/',save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0,),
+        TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/', histogram_freq=1),
         
     ]
 
