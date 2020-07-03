@@ -4,6 +4,7 @@ from .data_utils.data_loader import image_segmentation_generator, \
 import glob
 import six
 from keras.callbacks import Callback
+from keras.callbacks import  TensorBoard,ModelCheckpoint
 
 
 def find_latest_checkpoint(checkpoints_path, fail_safe=True):
@@ -148,8 +149,8 @@ def train(model,
             val_images, val_annotations,  val_batch_size,
             n_classes, input_height, input_width, output_height, output_width)
     
-    checkpoint_filepath = '/cta/users/gyar/Finland/RunFolder/checkpoint'
-    model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    checkpoint_filepath = '/cta/users/gyar/Finland/RunFolder/checkpoint/'
+    model_checkpoint_callback = ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=True,
     monitor='val_acc',
@@ -157,7 +158,7 @@ def train(model,
     save_best_only=True)
     
     
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs',
+    tensorboard_callback = TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/',
                                                       histogram_freq=1,
                                                       profile_batch=5)
     
