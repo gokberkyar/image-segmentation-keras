@@ -147,9 +147,22 @@ def train(model,
         val_gen = image_segmentation_generator(
             val_images, val_annotations,  val_batch_size,
             n_classes, input_height, input_width, output_height, output_width)
-
+    
+    checkpoint_filepath = '/cta/users/gyar/Finland/RunFolder/checkpoint'
+    model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_filepath,
+    save_weights_only=True,
+    monitor='val_acc',
+    mode='max',
+    save_best_only=True)
+    
+    
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs',
+                                                      profile_batch=5)
+    
     callbacks = [
-        CheckpointsCallback(checkpoints_path)
+        model_checkpoint_callback,tensorboard_callback
+        
     ]
 
     if not validate:
