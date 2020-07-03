@@ -154,8 +154,10 @@ def train(model,
   
     callbacks = [
         
-        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/',save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0),
+        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/', monitor='val_loss', verbose=0, save_best_only=False,save_weights_only=False, mode='auto', save_freq='epoch'),
+        
         TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/', histogram_freq=1)
+       
         
     ]
 
