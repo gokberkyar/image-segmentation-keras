@@ -158,6 +158,7 @@ def train(model,
     
     
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs',
+                                                      histogram_freq=1,
                                                       profile_batch=5)
     
     callbacks = [
