@@ -70,7 +70,8 @@ def train(model,
           ignore_zero_class=False,
           optimizer_name='adadelta',
           do_augment=False,
-          augmentation_name="aug_all"):
+          augmentation_name="aug_all",
+          expNumber):
 
     from .models.all_models import model_from_name
     # check if user gives model name instead of the model object
@@ -148,15 +149,15 @@ def train(model,
         val_gen = image_segmentation_generator(
             val_images, val_annotations,  val_batch_size,
             n_classes, input_height, input_width, output_height, output_width)
-    
 
-    
-  
+
+
+
     callbacks = [
-        
-        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/',save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0),
-        TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/', histogram_freq=1)
-        
+
+        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/experiment/'+ str(expNumber) +"/",save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0),
+        TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/experiment' + str(expNumber) +"/", histogram_freq=1)
+
     ]
 
     if not validate:
