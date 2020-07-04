@@ -158,6 +158,7 @@ def train(model,
         ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/experiment/'+ str(expNumber) +"/",save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0),
         TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/experiment' + str(expNumber) +"/", histogram_freq=1)
 
+
     ]
 
     if not validate:
