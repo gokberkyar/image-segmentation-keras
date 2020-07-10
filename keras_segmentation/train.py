@@ -5,7 +5,8 @@ import glob
 import six
 from keras.callbacks import Callback
 from keras.callbacks import  TensorBoard,ModelCheckpoint
-
+from tensorflow.summary import create_file_writer
+import matplotlib.pyplot as plt
 
 def find_latest_checkpoint(checkpoints_path, fail_safe=True):
 
@@ -51,6 +52,7 @@ class CheckpointsCallback(Callback):
 def train(model,
           train_images,
           train_annotations,
+          expNumber,
           input_height=None,
           input_width=None,
           n_classes=None,
@@ -71,7 +73,7 @@ def train(model,
           optimizer_name='adadelta',
           do_augment=False,
           augmentation_name="aug_all",
-          expNumber):
+          ):
 
     from .models.all_models import model_from_name
     # check if user gives model name instead of the model object
@@ -153,11 +155,11 @@ def train(model,
 
 
 
+
     callbacks = [
 
-        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/experiment'+ str(expNumber) +"/",save_weights_only=True,monitor='train_acc',mode='max',save_best_only=False,save_freq="epoch",verbose=0),
+        ModelCheckpoint(filepath='/cta/users/gyar/Finland/RunFolder/checkpoint/experiment'+ str(expNumber) +"/",save_weights_only=False,monitor='val_accuracy',mode='max',save_best_only=True,save_freq="epoch",verbose=0),
         TensorBoard(log_dir='/cta/users/gyar/Finland/RunFolder/logs/experiment' + str(expNumber) +"/", histogram_freq=1)
-
 
     ]
 
