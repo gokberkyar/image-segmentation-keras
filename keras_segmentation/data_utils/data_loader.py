@@ -4,6 +4,9 @@ import random
 import six
 import numpy as np
 import cv2
+import imageio
+import imgaug as ia
+from imgaug import augmenters as iaa
 
 try:
     from tqdm import tqdm
@@ -85,6 +88,8 @@ def get_image_array(image_input,
     if type(image_input) is np.ndarray:
         # It is already an array, use it as it is
         img = image_input
+    elif type(image_input) is imageio.core.util.Array:
+        img = np.asarray(image_input)
     elif isinstance(image_input, six.string_types):
         if not os.path.isfile(image_input):
             raise DataLoaderError("get_image_array: path {0} doesn't exist"
@@ -107,6 +112,16 @@ def get_image_array(image_input,
         img = cv2.resize(img, (width, height))
         img = img.astype(np.float32)
         img = img/255.0
+    elif imgNorm == "clashe":
+        img = cv2.resize(img, (width, height))
+        img = np.array([img])
+        img = iaa.CLAHE()(images=img)[0]
+        img = img.astype(np.float32)
+        img[:, :, 0] -= 103.939
+        img[:, :, 1] -= 116.779
+        img[:, :, 2] -= 123.68
+        img = img[:, :, ::-1]
+
 
     if ordering == 'channels_first':
         img = np.rollaxis(img, 2, 0)
@@ -122,6 +137,8 @@ def get_segmentation_array(image_input, nClasses,
     if type(image_input) is np.ndarray:
         # It is already an array, use it as it is
         img = image_input
+    elif type(image_input) is imageio.core.util.Array:
+        img = np.asarray(image_input)
     elif isinstance(image_input, six.string_types):
         if not os.path.isfile(image_input):
             raise DataLoaderError("get_segmentation_array: "

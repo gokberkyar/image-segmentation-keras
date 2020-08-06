@@ -51,12 +51,12 @@ def _load_augmentation_aug_non_geometric():
         iaa.Sometimes(0.2, iaa.JpegCompression(compression=(70, 99))),
         iaa.Sometimes(0.2, iaa.GaussianBlur(sigma=(0, 3.0))),
         iaa.Sometimes(0.2, iaa.MotionBlur(k=15, angle=[-45, 45])),
-        iaa.Sometimes(0.2, iaa.MultiplyHue((0.5, 1.5))),
-        iaa.Sometimes(0.2, iaa.MultiplySaturation((0.5, 1.5))),
-        iaa.Sometimes(0.34, iaa.MultiplyHueAndSaturation((0.5, 1.5),
-                                                         per_channel=True)),
-        iaa.Sometimes(0.34, iaa.Grayscale(alpha=(0.0, 1.0))),
-        iaa.Sometimes(0.2, iaa.ChangeColorTemperature((1100, 10000))),
+       iaa.Sometimes(0.2, iaa.MultiplyHue((0.5, 1.5))),
+       iaa.Sometimes(0.2, iaa.MultiplySaturation((0.5, 1.5))),
+       iaa.Sometimes(0.34, iaa.MultiplyHueAndSaturation((0.5, 1.5),
+                                                        per_channel=True)),
+       iaa.Sometimes(0.34, iaa.Grayscale(alpha=(0.0, 1.0))),
+       iaa.Sometimes(0.2, iaa.ChangeColorTemperature((1100, 10000))),
         iaa.Sometimes(0.1, iaa.GammaContrast((0.5, 2.0))),
         iaa.Sometimes(0.2, iaa.SigmoidContrast(gain=(3, 10),
                                                cutoff=(0.4, 0.6))),
@@ -65,7 +65,12 @@ def _load_augmentation_aug_non_geometric():
         iaa.Sometimes(0.2, iaa.LinearContrast((0.5, 2.0), per_channel=0.5)),
         iaa.Sometimes(0.1, iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)))
     ])
+def _load_augmentation_aug_Clashe():
+    return iaa.Sequential([
 
+        iaa.Sometimes(1, iaa.CLAHE())
+
+    ])
 
 def _load_augmentation_aug_all2():
     return iaa.Sequential([
@@ -184,7 +189,8 @@ augmentation_functions = {
     "aug_all": _load_augmentation_aug_all,
     "aug_all2": _load_augmentation_aug_all2,
     "aug_geometric": _load_augmentation_aug_geometric,
-    "aug_non_geometric": _load_augmentation_aug_non_geometric
+    "aug_non_geometric": _load_augmentation_aug_non_geometric,
+    "clashe":_load_augmentation_aug_Clashe
 }
 
 
@@ -212,10 +218,10 @@ def _augment_seg(img, seg, augmentation_name="aug_all"):
     # Augment the input image
     image_aug = aug_det.augment_image(img)
 
-    segmap = ia.SegmentationMapOnImage(
-        seg, nb_classes=np.max(seg) + 1, shape=img.shape)
+    segmap = ia.SegmentationMapsOnImage(
+        seg, shape=img.shape)
     segmap_aug = aug_det.augment_segmentation_maps(segmap)
-    segmap_aug = segmap_aug.get_arr_int()
+    segmap_aug = segmap_aug.get_arr()
 
     return image_aug, segmap_aug
 
